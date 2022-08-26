@@ -9,49 +9,101 @@ windows = {}
 
 ---@param collection ISCollapsableWindow[]
 function closeWindows(collection)
-    for i, window in ipairs(collection) do
+    for _, window in ipairs(collection) do
         window:close()
+    end
+end
+
+---@param cX Integer
+---@param cY Integer
+---@param cZ Integer
+function updateGenerators(cX, cY, cZ)
+    local minX = cX - 20
+    local maxX = cX + 20
+    local minY = cY - 20
+    local maxY = cY + 20
+    local tempCZ = cZ
+    local minZ = Math.max(0, tempCZ - 3)
+    local maxZ = Math.min(8, tempCZ + 3)
+    for gZ=minZ,maxZ-1,1 do
+        for gX=minX,maxX,1 do
+            for gY=minY,maxY,1 do
+                local utility = IsoUtils.DistanceToSquared(gX+.5,gY+.5,cX+.5,cY+.5)
+                if utility <= 400.0 then
+                    local actualCell = getWorld():getCell()
+                    local actualSquare = actualCell:getGridSquare(gX,gY,gZ)
+                    if actualSquare ~= nil then
+                        for i=0,actualSquare:getObjects():size()-1,1 do
+                            ---@type IsoObject
+                            local actualObject = actualSquare:getObjects():get(i)
+                            if actualObject ~= nil and instanceof(actualObject,"IsoGenerator") then
+                                print("one generator found")
+                                ---@type IsoGenerator
+                                actualObject:setSurroundingElectricity()
+                            end
+                        end
+                    end
+                end
+            end
+        end
     end
 end
 
 ---@param object IsoObject
 local function OnObjectRightMouseButtonUp( object,  x, y)
-    print("******************** INICIO NOVO LOG ********************")
-    if object:getContainerCount() > 0 then
-        print(object:getContainer():getType())
-        if object:getContainer():getType() == "fridge" or object:getContainer():getType() == "fridge_off" then
-            print("E uma geladeira")
+    if isShiftKeyDown() then
+        if object:getContainerCount() > 0 then
+            print(object:getContainer():getType())
+            if object:getContainer():getType() == "fridge" or object:getContainer():getType() == "fridge_off" then
 
-            closeWindows(windows)
+                closeWindows(windows)
 
-            local mainWindow = ISCollapsableWindow:new(x-125, y-125, 300, 100);
-            mainWindow:setVisible(true);
+                local mainWindow = ISCollapsableWindow:new(x-125, y-125, 300, 100);
+                mainWindow:setVisible(true);
 
-            local btnOn = ISButton:new(0, mainWindow:titleBarHeight(), 20, 20, getText("UI_TURN_ON"))
-            local btnOff = ISButton:new(mainWindow:getWidth()-20, mainWindow:titleBarHeight(), 20, 20, getText("UI_TURN_OFF"))
+                local btnOn = ISButton:new(0, mainWindow:titleBarHeight(), 20, 20, getText("UI_TURN_ON"))
+                local btnOff = ISButton:new(mainWindow:getWidth()-80, mainWindow:titleBarHeight(), 20, 20, getText("UI_TURN_OFF"))
 
-            btnOn:setTitle("On")
-            btnOff:setTitle("Off")
+                ---@param state Integer
+                ---@param button ISButton
+                ---@param o IsoObject
+                local changeFridgeState = function(_,button,state,o)
+                    print("State"..state)
+                    print("Button"..button:getTitle())
+                    if state == 0 then
+                        o:getContainer():setType("fridge_off")
+                        if o:getContainerByType("freezer") ~= nil then
+                            o:getContainerByType("freezer"):setType("freezer_off")
+                        end
+                    else
+                        o:getContainer():setType("fridge")
+                        if o:getContainerByType("freezer_off") ~= nil then
+                            o:getContainerByType("freezer_off"):setType("freezer")
+                        end
+                    end
+                    updateGenerators(o:getContainer():getSourceGrid():getX(),o:getContainer():getSourceGrid():getY(),o:getContainer():getSourceGrid():getZ())
+                end
 
-            btnOn:initialise()
-            btnOn:instantiate()
+                btnOn:setOnClick(changeFridgeState,1,object)
+                btnOff:setOnClick(changeFridgeState,0,object)
 
-            btnOff:initialise()
-            btnOff:instantiate()
+                btnOn:setTitle("On")
+                btnOff:setTitle("Off")
 
-            mainWindow:addChild(btnOn);
-            mainWindow:addChild(btnOff);
+                btnOn:initialise()
+                btnOn:instantiate()
 
-            mainWindow:addToUIManager()
-            windows[1] = mainWindow
+                btnOff:initialise()
+                btnOff:instantiate()
 
-        else
-            print("Nao e uma geladeira")
+                mainWindow:addChild(btnOn);
+                mainWindow:addChild(btnOff);
+
+                mainWindow:addToUIManager()
+                windows[1] = mainWindow
+            end
         end
-    else
-        print("Nao tem container")
     end
-    print("******************** FIM NOVO LOG ********************")
 end
 
 Events.OnObjectRightMouseButtonUp.Add(OnObjectRightMouseButtonUp)
