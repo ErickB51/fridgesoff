@@ -4,14 +4,57 @@
 --- DateTime: 24/08/2022 16:34
 ---
 
----@type ISCollapsableWindow[]
-windows = {}
+---@class ISToggleFridgesFreezers : ISBaseTimedAction
+ISToggleFridgesFreezers = ISBaseTimedAction:derive("ISToggleFridgesFreezers");
 
----@param collection ISCollapsableWindow[]
-function closeWindows(collection)
-    for _, window in ipairs(collection) do
-        window:close()
+function ISToggleFridgesFreezers:isValid()
+    return true
+end
+
+function ISToggleFridgesFreezers:update()
+end
+
+function ISToggleFridgesFreezers:start()
+    self.character:faceThisObject(self.object)
+end
+
+function ISToggleFridgesFreezers:stop()
+    ISBaseTimedAction.stop(self)
+end
+
+function ISToggleFridgesFreezers:perform()
+    if self.state == 0 then
+        if self.object:getContainerByType("fridge") ~= nil then
+            self.object:getContainerByType("fridge"):setType("fridge_off")
+        end
+        if self.object:getContainerByType("freezer") ~= nil then
+            self.object:getContainerByType("freezer"):setType("freezer_off")
+        end
+    else
+        if self.object:getContainerByType("fridge_off") ~= nil then
+            self.object:getContainerByType("fridge_off"):setType("fridge")
+        end
+        if self.object:getContainerByType("freezer_off") ~= nil then
+            self.object:getContainerByType("freezer_off"):setType("freezer")
+        end
     end
+    updateGenerators(self.object:getContainer():getSourceGrid():getX(),self.object:getContainer():getSourceGrid():getY(),self.object:getContainer():getSourceGrid():getZ())
+    -- needed to remove from queue / start next.
+    ISBaseTimedAction.perform(self)
+end
+
+function ISToggleFridgesFreezers:new(objPlayer, state, obj)
+    local o = {}
+    setmetatable(o, self)
+    self.__index = self
+    o.character = objPlayer
+    o.stopOnWalk = false
+    o.stopOnRun = false
+    o.maxTime = 0
+    -- custom fields
+    o.object = obj
+    o.state = state
+    return o
 end
 
 ---@param cX Integer
@@ -37,7 +80,6 @@ function updateGenerators(cX, cY, cZ)
                             ---@type IsoObject
                             local actualObject = actualSquare:getObjects():get(i)
                             if actualObject ~= nil and instanceof(actualObject,"IsoGenerator") then
-                                print("one generator found")
                                 ---@type IsoGenerator
                                 actualObject:setSurroundingElectricity()
                             end
@@ -49,61 +91,41 @@ function updateGenerators(cX, cY, cZ)
     end
 end
 
----@param object IsoObject
-local function OnObjectRightMouseButtonUp( object,  x, y)
-    if isShiftKeyDown() then
-        if object:getContainerCount() > 0 then
-            print(object:getContainer():getType())
-            if object:getContainer():getType() == "fridge" or object:getContainer():getType() == "fridge_off" then
+---@param player IsoPlayer
+---@param context KahluaTable
+---@param worldObjects KahluaTable
+---@param _ Boolean
+local function customizedContextMenu(player, context, worldObjects, _)
 
-                closeWindows(windows)
+    local objectPlayer = getSpecificPlayer(player)
 
-                local mainWindow = ISCollapsableWindow:new(x-125, y-125, 300, 100);
-                mainWindow:setVisible(true);
+    if objectPlayer:isAsleep() then
+        return
+    end
 
-                local btnOn = ISButton:new(0, mainWindow:titleBarHeight(), 20, 20, getText("UI_TURN_ON"))
-                local btnOff = ISButton:new(mainWindow:getWidth()-80, mainWindow:titleBarHeight(), 20, 20, getText("UI_TURN_OFF"))
+    ---@param objPlayer IsoPlayer
+    ---@param state Integer
+    ---@param o IsoObject
+    local changeFridgeFreezerState = function(_,objPlayer,state,o)
+        if luautils.walkAdj(objPlayer, o:getSquare()) then
+            ISTimedActionQueue.add(ISToggleFridgesFreezers:new(objPlayer, state, o))
+        end
+    end
 
-                ---@param state Integer
-                ---@param button ISButton
-                ---@param o IsoObject
-                local changeFridgeState = function(_,button,state,o)
-                    print("State"..state)
-                    print("Button"..button:getTitle())
-                    if state == 0 then
-                        o:getContainer():setType("fridge_off")
-                        if o:getContainerByType("freezer") ~= nil then
-                            o:getContainerByType("freezer"):setType("freezer_off")
-                        end
-                    else
-                        o:getContainer():setType("fridge")
-                        if o:getContainerByType("freezer_off") ~= nil then
-                            o:getContainerByType("freezer_off"):setType("freezer")
-                        end
-                    end
-                    updateGenerators(o:getContainer():getSourceGrid():getX(),o:getContainer():getSourceGrid():getY(),o:getContainer():getSourceGrid():getZ())
-                end
-
-                btnOn:setOnClick(changeFridgeState,1,object)
-                btnOff:setOnClick(changeFridgeState,0,object)
-
-                btnOn:setTitle("On")
-                btnOff:setTitle("Off")
-
-                btnOn:initialise()
-                btnOn:instantiate()
-
-                btnOff:initialise()
-                btnOff:instantiate()
-
-                mainWindow:addChild(btnOn);
-                mainWindow:addChild(btnOff);
-
-                mainWindow:addToUIManager()
-                windows[1] = mainWindow
+    ---@type IsoObject
+    local actualObject = worldObjects[1]
+    if actualObject then
+        local containerCount = actualObject:getContainerCount()
+        if containerCount > 0 then
+            local containerType = actualObject:getContainer():getType()
+            if containerType == "fridge" or containerType == "freezer" then
+                context:addOptionOnTop(getText("Turn Off"), worldObjects, changeFridgeFreezerState, objectPlayer, 0, actualObject)
+            end
+            if containerType == "fridge_off" or containerType == "freezer_off" then
+                context:addOptionOnTop(getText("Turn On"), worldObjects, changeFridgeFreezerState, objectPlayer, 1, actualObject)
             end
         end
     end
 end
 
-Events.OnObjectRightMouseButtonUp.Add(OnObjectRightMouseButtonUp)
+Events.OnPreFillWorldObjectContextMenu.Add(customizedContextMenu)
