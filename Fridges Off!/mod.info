@@ -1,5 +1,5 @@
 name=Fridges Off!
-poster=
+poster=poster.png
 id=fridgesoff
 description=A mod for turning off fridges on Project Zomboid
-url=
+url=https://github.com/ErickB51/fridgesoff
