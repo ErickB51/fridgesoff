@@ -128,4 +128,14 @@ local function customizedContextMenu(player, context, worldObjects, _)
     end
 end
 
+local function loadNewIcons()
+    ---@type Texture
+    local textureFridgeOff = getTexture("media/ui/Container_FridgeOff.png")
+    ---@type Texture
+    local textureFreezerOff = getTexture("media/ui/Container_FreezerOff.png")
+    ContainerButtonIcons.fridge_off = textureFridgeOff
+    ContainerButtonIcons.freezer_off = textureFreezerOff
+end
+
+Events.OnGameBoot.Add(loadNewIcons)
 Events.OnPreFillWorldObjectContextMenu.Add(customizedContextMenu)
