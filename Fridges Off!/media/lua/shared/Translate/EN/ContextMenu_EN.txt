@@ -1,0 +1,4 @@
+ContextMenu_EN = {
+    ContextMenu_TurnOn = "Plug",
+    ContextMenu_TurnOff = "Unplug",
+}

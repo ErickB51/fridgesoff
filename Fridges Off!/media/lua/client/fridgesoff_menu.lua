@@ -39,6 +39,13 @@ function ISToggleFridgesFreezers:perform()
         end
     end
     updateGenerators(self.object:getContainer():getSourceGrid():getX(),self.object:getContainer():getSourceGrid():getY(),self.object:getContainer():getSourceGrid():getZ())
+
+    local playerData = getPlayerData(self.character:getPlayerNum());
+    if playerData ~= nil then
+        playerData.playerInventory:refreshBackpacks();
+        playerData.lootInventory:refreshBackpacks();
+    end
+
     -- needed to remove from queue / start next.
     ISBaseTimedAction.perform(self)
 end
@@ -119,10 +126,10 @@ local function customizedContextMenu(player, context, worldObjects, _)
         if containerCount > 0 then
             local containerType = actualObject:getContainer():getType()
             if containerType == "fridge" or containerType == "freezer" then
-                context:addOptionOnTop(getText("Turn Off"), worldObjects, changeFridgeFreezerState, objectPlayer, 0, actualObject)
+                context:addOptionOnTop(getText("ContextMenu_TurnOff"), worldObjects, changeFridgeFreezerState, objectPlayer, 0, actualObject)
             end
             if containerType == "fridge_off" or containerType == "freezer_off" then
-                context:addOptionOnTop(getText("Turn On"), worldObjects, changeFridgeFreezerState, objectPlayer, 1, actualObject)
+                context:addOptionOnTop(getText("ContextMenu_TurnOn"), worldObjects, changeFridgeFreezerState, objectPlayer, 1, actualObject)
             end
         end
     end
