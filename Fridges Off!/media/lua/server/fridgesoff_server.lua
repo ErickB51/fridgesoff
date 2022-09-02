@@ -107,12 +107,20 @@ local function onClientCommand(module,command,player,args)
                 end
             end
 
-            sendServerCommand("fridges-off","sync",{x=args.x,y=args.y,z=args.z,fridge=fridge,freezer=freezer})
+            if isServer() then
+                sendServerCommand("fridges-off","sync",{x=args.x,y=args.y,z=args.z,fridge=fridge,freezer=freezer})
+            end
+
+            if not isServer() and not isClient() then
+                local playerData = getPlayerData(getPlayer():getPlayerNum())
+                if playerData ~= nil then
+                    playerData.playerInventory:refreshBackpacks()
+                    playerData.lootInventory:refreshBackpacks()
+                end
+            end
 
         end
-
     end
-
 end
 
 Events.OnClientCommand.Add(onClientCommand)

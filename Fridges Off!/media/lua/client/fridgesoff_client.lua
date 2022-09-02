@@ -30,12 +30,6 @@ function ISToggleFridgesFreezers:perform()
         sendClientCommand("fridges-off", "on", {x = self.object:getX(),y = self.object:getY(),z = self.object:getZ()});
     end
 
-    local playerData = getPlayerData(self.character:getPlayerNum())
-    if playerData ~= nil then
-        playerData.playerInventory:refreshBackpacks()
-        playerData.lootInventory:refreshBackpacks()
-    end
-
     -- needed to remove from queue / start next.
     ISBaseTimedAction.perform(self)
 end
@@ -129,9 +123,6 @@ local function onServerCommand(module,command,args)
             if object ~= nil then
 
                 if args.fridge == "on" then
-                    if object:getContainerByType("fridge") ~= nil then
-                        object:getContainerByType("fridge"):setType("fridge")
-                    end
                     if object:getContainerByType("fridge_off") ~= nil then
                         object:getContainerByType("fridge_off"):setType("fridge")
                     end
@@ -140,16 +131,10 @@ local function onServerCommand(module,command,args)
                         if object:getContainerByType("fridge") ~= nil then
                             object:getContainerByType("fridge"):setType("fridge_off")
                         end
-                        if object:getContainerByType("fridge_off") ~= nil then
-                            object:getContainerByType("fridge_off"):setType("fridge_off")
-                        end
                     end
                 end
 
                 if args.freezer == "on" then
-                    if object:getContainerByType("freezer") ~= nil then
-                        object:getContainerByType("freezer"):setType("freezer")
-                    end
                     if object:getContainerByType("freezer_off") ~= nil then
                         object:getContainerByType("freezer_off"):setType("freezer")
                     end
@@ -157,9 +142,6 @@ local function onServerCommand(module,command,args)
                     if args.freezer == "off" then
                         if object:getContainerByType("freezer") ~= nil then
                             object:getContainerByType("freezer"):setType("freezer_off")
-                        end
-                        if object:getContainerByType("freezer_off") ~= nil then
-                            object:getContainerByType("freezer_off"):setType("freezer_off")
                         end
                     end
                 end
@@ -171,6 +153,7 @@ local function onServerCommand(module,command,args)
                     playerData.playerInventory:refreshBackpacks()
                     playerData.lootInventory:refreshBackpacks()
                 end
+
             end
         end
     end
