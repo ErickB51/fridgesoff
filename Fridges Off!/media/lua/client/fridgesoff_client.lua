@@ -148,6 +148,8 @@ local function onServerCommand(module,command,args)
 
                 IsoGenerator.updateGenerator(object:getSquare())
 
+                object:checkHaveElectricity()
+
                 local playerData = getPlayerData(getPlayer():getPlayerNum())
                 if playerData ~= nil then
                     playerData.playerInventory:refreshBackpacks()

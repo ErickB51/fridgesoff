@@ -84,6 +84,8 @@ local function onClientCommand(module,command,player,args)
 
             updateGenerators(object:getContainer():getSourceGrid():getX(),object:getContainer():getSourceGrid():getY(),object:getContainer():getSourceGrid():getZ())
 
+            object:checkHaveElectricity()
+
             local fridge
             local freezer
 
