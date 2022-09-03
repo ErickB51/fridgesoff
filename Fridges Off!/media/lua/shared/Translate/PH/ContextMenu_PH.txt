@@ -1,0 +1,4 @@
+ContextMenu_PH = {
+    ContextMenu_TurnOn = "Isaksak",
+    ContextMenu_TurnOff = "I-unplug",
+}

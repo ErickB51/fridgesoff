@@ -1,0 +1,4 @@
+ContextMenu_KO = {
+    ContextMenu_TurnOn = "플러그인",
+    ContextMenu_TurnOff = "플러그 뽑기",
+}

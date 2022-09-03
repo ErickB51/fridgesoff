@@ -1,0 +1,4 @@
+ContextMenu_JP = {
+    ContextMenu_TurnOn = "電流を通す",
+    ContextMenu_TurnOff = "抜く",
+}

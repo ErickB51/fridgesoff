@@ -1,0 +1,4 @@
+ContextMenu_HU = {
+    ContextMenu_TurnOn = "Csatlakoztat",
+    ContextMenu_TurnOff = "Kihúz",
+}

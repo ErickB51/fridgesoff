@@ -1,0 +1,4 @@
+ContextMenu_TH = {
+    ContextMenu_TurnOn = "เสียบเข้าไป",
+    ContextMenu_TurnOff = "ถอดปลั๊ก",
+}

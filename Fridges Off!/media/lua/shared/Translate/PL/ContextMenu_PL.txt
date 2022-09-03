@@ -1,0 +1,4 @@
+ContextMenu_PL = {
+    ContextMenu_TurnOn = "Podłącz",
+    ContextMenu_TurnOff = "Wyjąć wtyczkę",
+}

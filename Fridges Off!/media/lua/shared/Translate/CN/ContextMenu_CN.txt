@@ -1,0 +1,4 @@
+ContextMenu_CN = {
+    ContextMenu_TurnOn = "插入",
+    ContextMenu_TurnOff = "拔",
+}

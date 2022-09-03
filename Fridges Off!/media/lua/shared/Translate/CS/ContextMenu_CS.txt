@@ -1,0 +1,4 @@
+ContextMenu_CS = {
+    ContextMenu_TurnOn = "Zapojit",
+    ContextMenu_TurnOff = "Odpojit",
+}

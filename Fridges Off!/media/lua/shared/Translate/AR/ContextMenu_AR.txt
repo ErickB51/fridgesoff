@@ -1,0 +1,4 @@
+ContextMenu_AR = {
+    ContextMenu_TurnOn = "Encender",
+    ContextMenu_TurnOff = "Apagar",
+}

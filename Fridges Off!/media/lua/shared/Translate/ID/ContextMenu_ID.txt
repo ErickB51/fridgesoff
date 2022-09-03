@@ -1,0 +1,4 @@
+ContextMenu_ID = {
+    ContextMenu_TurnOn = "Menyambungkan",
+    ContextMenu_TurnOff = "Cabut",
+}

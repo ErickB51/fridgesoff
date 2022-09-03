@@ -1,0 +1,4 @@
+ContextMenu_RU = {
+    ContextMenu_TurnOn = "включить",
+    ContextMenu_TurnOff = "выключить",
+}

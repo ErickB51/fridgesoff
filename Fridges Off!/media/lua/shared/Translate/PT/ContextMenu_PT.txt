@@ -1,0 +1,4 @@
+ContextMenu_PT = {
+    ContextMenu_TurnOn = "Ligar",
+    ContextMenu_TurnOff = "Desligar",
+}
