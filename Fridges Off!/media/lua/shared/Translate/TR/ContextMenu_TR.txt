@@ -1,4 +1,4 @@
-ContextMenu_TR = {
+ï»¿ContextMenu_TR = {
     ContextMenu_TurnOn = "Eklenti",
-    ContextMenu_TurnOff = "FiÅŸten Ã§ekin",
+    ContextMenu_TurnOff = "Fiþten çekin",
 }

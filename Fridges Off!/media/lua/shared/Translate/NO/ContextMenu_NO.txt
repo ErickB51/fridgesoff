@@ -1,0 +1,4 @@
+ContextMenu_NO = {
+    ContextMenu_TurnOn = "Plugg inn",
+    ContextMenu_TurnOff = "Trekk ut støpselet",
+}

@@ -1,4 +1,4 @@
 ContextMenu_PL = {
-    ContextMenu_TurnOn = "PodÅ‚Ä…cz",
-    ContextMenu_TurnOff = "WyjÄ…Ä‡ wtyczkÄ™",
+    ContextMenu_TurnOn = "Pod³¹cz",
+    ContextMenu_TurnOff = "Wyj¹æ wtyczkê",
 }

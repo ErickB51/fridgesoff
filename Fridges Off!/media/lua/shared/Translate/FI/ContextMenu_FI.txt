@@ -1,0 +1,4 @@
+ContextMenu_FI = {
+    ContextMenu_TurnOn = "Kytkeä",
+    ContextMenu_TurnOff = "Irrota pistoke",
+}

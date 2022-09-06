@@ -1,4 +1,4 @@
 ContextMenu_RU = {
-    ContextMenu_TurnOn = "РІРєР»СЋС‡РёС‚СЊ",
-    ContextMenu_TurnOff = "РІС‹РєР»СЋС‡РёС‚СЊ",
+    ContextMenu_TurnOn = "включить",
+    ContextMenu_TurnOff = "выключить",
 }

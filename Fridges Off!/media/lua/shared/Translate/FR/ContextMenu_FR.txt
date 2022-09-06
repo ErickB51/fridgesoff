@@ -1,4 +1,4 @@
 ContextMenu_FR = {
     ContextMenu_TurnOn = "Brancher",
-    ContextMenu_TurnOff = "DÃ©brancher",
+    ContextMenu_TurnOff = "Débrancher",
 }

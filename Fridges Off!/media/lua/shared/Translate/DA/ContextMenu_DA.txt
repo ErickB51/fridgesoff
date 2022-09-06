@@ -1,0 +1,4 @@
+ContextMenu_DA = {
+    ContextMenu_TurnOn = "Tilslut",
+    ContextMenu_TurnOff = "Tag stikket ud",
+}

@@ -1,0 +1,4 @@
+ContextMenu_UA = {
+    ContextMenu_TurnOn = "Підключати",
+    ContextMenu_TurnOff = "Від'єднайте",
+}
